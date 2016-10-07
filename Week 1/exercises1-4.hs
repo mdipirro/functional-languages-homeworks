@@ -2,39 +2,21 @@
 ---------------------------------Exercise 1-------------------------------------
 --------------------------------------------------------------------------------
 {-|
-  The 'getLastDigit' function returns the last digit on an Integer number.
-  It takes one argument, of type 'Integer', which represents the number.
--}
-getLastDigit :: Integer -> Integer
-getLastDigit x =  if x < 10
-                  then x
-                  else x - 10 * getAllDigitsButTheLast x
-
-
-{-|
-  The 'getAllDigitsButTheLast' function returns the last digit on an Integer
-  number.
-  It takes one argument, of type 'Integer', which represents the number.
--}
-getAllDigitsButTheLast :: Integer -> Integer
-getAllDigitsButTheLast x = x `div` 10
-
-{-|
   The 'toDigits' function converts positive integers to a list of digits.
   It takes one argument, of type 'Integer', which represents the number.
 -}
 toDigits :: Integer -> [Integer]
 toDigits x = reverse (toDigitsRev x)
 
-  {-|
-    The 'toDigitsRev' function converts positive integers to a list of digits,
-    but the order of the digits is opposite compared to the number digits.
-    It takes one argument, of type 'Integer', which represents the number.
-  -}
+{-|
+  The 'toDigitsRev' function converts positive integers to a list of digits,
+  but the order of the digits is opposite compared to the number digits.
+  It takes one argument, of type 'Integer', which represents the number.
+-}
 toDigitsRev :: Integer -> [Integer]
 toDigitsRev x = if x <= 0
                 then []
-                else getLastDigit x : toDigitsRev (getAllDigitsButTheLast x)
+                else (x `mod` 10) : (toDigitsRev (x `div` 10))
 
 --------------------------------------------------------------------------------
 ---------------------------------Exercise 2-------------------------------------
@@ -67,8 +49,7 @@ doubleEvenIndexed xs          = xs
 -}
 sumDigits :: [Integer] -> Integer
 sumDigits []      = 0
-sumDigits (x:[])  = sum (toDigits x)
-sumDigits (x:xs)  = sumDigits (toDigits x) + sumDigits xs
+sumDigits (x:xs)  = sum (toDigits x) + sumDigits xs
 
 --------------------------------------------------------------------------------
 ---------------------------------Exercise 4-------------------------------------
