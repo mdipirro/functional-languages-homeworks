@@ -74,7 +74,7 @@ sumDigits (x:xs)  = sumDigits (toDigits x) + sumDigits xs
 ---------------------------------Exercise 4-------------------------------------
 --------------------------------------------------------------------------------
 {-|
-  Finally validate a credit card number! The 'validate' function validate an
+  Finally validate a credit card number! The 'validate' function validates an
   US credit card number.
   It takes one argument, a number, and return the value True iff
   the incoming number is a valid credit card number, False otherwise.
