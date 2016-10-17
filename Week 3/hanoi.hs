@@ -1,10 +1,6 @@
 type Peg = String
 type Move = (Peg, Peg)
 
---------------------------------------------------------------------------------
----------------------------------Exercise 5-------------------------------------
---------------------------------------------------------------------------------
-
 {-|
 The Towers of Hanoi is a classic puzzle with a solution that can be described
 recursively. Disks of different sizes are stacked on three pegs; the goal is to
@@ -25,5 +21,5 @@ performed to move the stack of discs from the first peg to the second.
 -}
 hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
 hanoi 0 _ _ _ = []
-hanoi 1 a b c = [(a, b)]
+hanoi 1 a b _ = [(a, b)]
 hanoi n a b c = hanoi (n-1) a c b ++ [(a, b)] ++ hanoi(n-1) c b a
