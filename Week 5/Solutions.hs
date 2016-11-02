@@ -62,6 +62,6 @@ solutions p ts =  and [evaluate p t | t <- ts]
                                                                               |otherwise  = find v ts
                         evaluate (Not p) ts       = not (evaluate p ts)
                         evaluate (And p1 p2) ts   = (evaluate p1 ts) && (evaluate p2 ts)
-                        evaluate (Imply p1 p2) ts = imply (evaluate p1 ts) (evaluate p2 ts)
-                                                    where imply False _ = True
-                                                          imply _ b2    = b2
+                        evaluate (Imply p1 p2) ts = if (not (evaluate p1 ts))
+                                                    then True
+                                                    else evaluate p2 ts
