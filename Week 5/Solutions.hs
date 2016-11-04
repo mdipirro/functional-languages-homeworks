@@ -55,13 +55,13 @@ each configuration (we say that the proposition is a tautology).
 -}
 solutions :: Prop -> [[(Char, Bool)]] -> Bool
 solutions p ts =  and [evaluate p t | t <- ts]
-                  where evaluate (Const b) _      = b
-                        evaluate (Var v) ts       = find v ts
+                  where evaluate (Const b) _     = b
+                        evaluate (Var v) t       = find v t
                                                     where find _ [] = False
-                                                          find v ((c, b):ts)  | v == c    = b
-                                                                              |otherwise  = find v ts
-                        evaluate (Not p) ts       = not (evaluate p ts)
-                        evaluate (And p1 p2) ts   = (evaluate p1 ts) && (evaluate p2 ts)
-                        evaluate (Imply p1 p2) ts = if (not (evaluate p1 ts))
+                                                          find v ((c, b):t) | v == c    = b
+                                                                            |otherwise  = find v t
+                        evaluate (Not p) t       = not (evaluate p t)
+                        evaluate (And p1 p2) t   = (evaluate p1 t) && (evaluate p2 t)
+                        evaluate (Imply p1 p2) t = if (not (evaluate p1 t))
                                                     then True
-                                                    else evaluate p2 ts
+                                                    else evaluate p2 t
