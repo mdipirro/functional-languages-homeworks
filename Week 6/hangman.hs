@@ -32,3 +32,27 @@ play word = do  putStr "? "
                                               then c
                                               else '-') word)
                         play word -- otherwise show the guessed chars and let the user retries!
+
+{-|
+This `play'` function is a more sophisticated version of the `play` one.
+Given a charachter `c`, if `c` is an element of guess, the latters shows every
+occurence of `c` in `word`. Indeed, if in `guess` there is only one occurrence
+of, let's say, 'a', and in `word` there are three occurences of 'a', `play`
+shows three occurences. `play'`, instead, shows only the first occurrence of
+'a'. More formally, given a character `c`, `play'` shows only the first `n`
+occurrences of `c` in `word`, where `n` is the number of the occurrences of `c`
+in `guess`.
+-}
+play' :: String -> IO ()
+play' word = do  putStr "? "
+                 guess <- getLine
+                 if word == guess
+                 then putStrLn "You got it!"
+                 else do putStrLn (discover word guess)
+                         play' word
+             where discover [] _                        = ""
+                   discover (c:cs) guess | elem c guess = c : discover cs (deleteFirst c guess)
+                                         | otherwise    = '-' : discover cs guess
+                   deleteFirst _ []                  = []
+                   deleteFirst a (b:bs)  | a == b    = bs
+                                         | otherwise = b : deleteFirst a bs
