@@ -44,15 +44,13 @@ Write an Haskell program that, given a list L of lists of Int, produces a new
 list that is obtained from L by adding 1 to the first list contained in L, then
 adding 2 to the second list of L ad so on.
 -}
--- Here I use again ZipLists, but this time is a bit more complicated. Firts of
--- all I create the 'increments' list, and I do that using recursion on 'n', a
--- parameter which is incremented through the input list. Then I use the
--- applicative style for performing the required operation. For each list 'is'
--- in the input list I sum every element of 'is' with the right incrment. After
--- that I remove the ZipList constructor using a lambda.
+-- Here I use again ZipLists. First of all, `increments` cntains a list of
+-- sections. These sections represent the desired increments. The list is like
+-- [(+1), (+2), .., +(length xss)]. After that I use the applicative style for
+-- performing the required operation. With a combination of ZipList and the list
+-- fmap I apply the right increment to every element of the right list. Finally,
+-- I unbox the ZipList using a lambda.
 incrementalAddition :: [[Int]] -> [[Int]]
-incrementalAddition iss = map (\(Z e) -> e) list
-                          where (Z list) = Main.pure sum Main.<*> (Z (increments 1 iss)) Main.<*> (Z iss)
-                                sum xs is = Main.pure (+) Main.<*> (Z xs) Main.<*> (Z is)
-                                increments _ [] = []
-                                increments n (is:iss) = (replicate (length is) n) : (increments (n + 1) iss)
+incrementalAddition xss = (\(Z e) -> e) (Main.pure sum Main.<*> (Z increments) Main.<*> (Z xss))
+                          where increments  = zipWith (\f x -> f x) (repeat (+)) [1..length xss]
+                                sum f xs    = Prelude.fmap f xs
