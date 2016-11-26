@@ -52,5 +52,5 @@ adding 2 to the second list of L ad so on.
 -- I unbox the ZipList using a lambda.
 incrementalAddition :: [[Int]] -> [[Int]]
 incrementalAddition xss = (\(Z e) -> e) (Main.pure sum Main.<*> (Z increments) Main.<*> (Z xss))
-                          where increments = zipWith (\f x -> f x) (repeat (+)) [1..length xss]
-                                sum f xs = Prelude.fmap f xs
+                          where increments  = zipWith (\f x -> f x) (repeat (+)) [1..length xss]
+                                sum f xs    = Prelude.fmap f xs
