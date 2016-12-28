@@ -1,6 +1,5 @@
 module Parser (Parser(P), parse, item, sat, digit, char, string, nat, space, token,
-symbol, expr, factor, term, pure, fmap, (<*>), (>>=), empty, (<|>), many, some,
-solve) where
+symbol, pure, fmap, (<*>), (>>=), empty, (<|>), many, some, natural) where
 
 import Control.Applicative
 import Data.Char
@@ -64,29 +63,8 @@ token p = do  space
               space
               return v
 
+natural :: Parser Int
+natural = token nat
+
 symbol :: String -> Parser String
 symbol xs = token (string xs)
-
-factor :: Parser Int
-factor =  do  symbol "("
-              e <- expr
-              symbol ")"
-              return e
-          <|> nat
-
-term :: Parser Int
-term = do f <- factor
-          do  symbol "*"
-              t <- term
-              return (f * t)
-              <|> return f
-
-expr :: Parser Int
-expr = do t <- term
-          do  symbol "+"
-              e <- expr
-              return (t + e)
-              <|> return t
-
-solve :: String -> Int
-solve e = (\[(solution, other)] -> solution) (parse expr  e)
