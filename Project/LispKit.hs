@@ -8,7 +8,8 @@ data LKC =  VAR String | NUM Int | NULL | ADD LKC LKC |
             deriving(Show, Eq)
 
 keywords :: [String]
-keywords = ["cons", "head", "tail", "eq", "leq", "lambda", "if", "let", "null"]
+keywords = ["cons", "head", "tail", "eq", "leq", "lambda", "if", "let", "null",
+  "letrec"]
 
 prog :: Parser LKC
 prog = letp <|> letrec
