@@ -7,6 +7,9 @@ data LKC =  VAR String | NUM Int | NULL | ADD LKC LKC |
             LET LKC [(LKC,LKC)] | LETREC LKC [(LKC, LKC)]
             deriving(Show, Eq)
 
+keywords :: [String]
+keywords = ["cons", "head", "tail", "eq", "leq", "lambda", "if", "let", "null"]
+
 prog :: Parser LKC
 prog = letp <|> letrec
 
@@ -38,14 +41,13 @@ bind =  do  v <- var
 var :: Parser LKC
 var = do  l  <- lower
           ls <- many alphanum
-          return $ VAR $ l:ls
+          let v = l:ls
+          if not $ elem v keywords
+          then return $ VAR v
+          else empty
 
 expr :: Parser LKC
-expr =  prog
-        <|> lambda
-        <|> expa
--- <|> opp
-        <|> ifp
+expr =  prog <|> lambda <|> expa <|> opp <|> ifp
 
 lambda :: Parser LKC
 lambda = do symbol "lambda"
@@ -69,11 +71,48 @@ seqvar = do v   <- var
             vs  <- many var
             return $ v:vs
 
-{-|opp :: Parser LKC
-opp = do  symbol "cons"
-          vs <- seqvar
-          return $ CONS vs
--}
+opp :: Parser LKC
+opp = cons <|> headp <|> tailp <|> eq <|> leq
+
+cons :: Parser LKC
+cons = do symbol "cons"
+          (e1, e2) <- twoarg
+          return $ CONS e1 e2
+
+headp :: Parser LKC
+headp = do  symbol "head"
+            e <- onearg
+            return $ H e
+
+tailp :: Parser LKC
+tailp = do  symbol "tail"
+            e <- onearg
+            return $ T e
+
+eq :: Parser LKC
+eq = do symbol "eq"
+        (e1, e2) <- twoarg
+        return $ Main.EQ e1 e2
+
+leq :: Parser LKC
+leq = do  symbol "leq"
+          (e1, e2) <- twoarg
+          return $ LEQ e1 e2
+
+onearg :: Parser LKC
+onearg = do symbol "("
+            e <- expr
+            symbol ")"
+            return e
+
+
+twoarg :: Parser (LKC, LKC)
+twoarg = do symbol "("
+            e1 <- expr
+            symbol ","
+            e2 <- expr
+            symbol ")"
+            return (e1, e2)
 
 expa :: Parser LKC
 expa = do t <- term
@@ -99,8 +138,7 @@ term = do f <- factor
 
 factor :: Parser LKC
 factor =  do  v <- var
-              do  symbol "Y"
-                  y <- functioncall
+              do  y <- functioncall
                   return $ CALL v y
                   <|> return v
           <|>
@@ -122,8 +160,14 @@ functioncall = do symbol "("
                   return es
 
 seqexpr :: Parser [LKC]
-seqexpr = do  e <- expr
-              do  symbol ","
-                  es <- seqexpr
-                  return $ e:es
-                  <|> return [e]
+seqexpr = do  e   <- expr
+              es  <- many (do symbol ","
+                              expr)
+              return $ e:es
+
+
+{-|do  symbol ","
+    es <- seqexpr
+    return $ e:es
+    <|> return [e]
+-}
