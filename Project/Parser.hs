@@ -44,9 +44,6 @@ digit = sat isDigit
 char :: Char -> Parser Char
 char x = sat (==x)
 
-lower :: Parser Char
-lower = sat isLower
-
 alphanum :: Parser Char
 alphanum = sat isAlphaNum
 
@@ -72,6 +69,10 @@ token p = do  space
 
 natural :: Parser Int
 natural = token nat
+
+lower :: Parser Char
+lower = do  space
+            sat isLower
 
 integer :: Parser Int
 integer =   do  symbol "-"
