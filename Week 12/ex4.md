@@ -129,29 +129,83 @@ pure (\g -> g y) <*> (Just f) = (Just f) <*> pure y
 = pure (\g -> g y) <*> Just f
 
 # x <*> (y <*> z) = pure (.) <*> x <*> y <*> z
-## Case 1 (x = Nothing)
-Nothing <*> (y <*> z) 
+## Case 1 (at least one among *x*, *y* or *z* is Nothing)
+### Lemma: a <*> Nothing = Nothing
+#### a = Nothing
+Nothing <*> Nothing 
+		applying <*>
 
-		unapplying fmap
-		
-= fmap (.) (Nothing <*> y <*> z)
+= Nothing
 
-		unapplying <*>
-		
-= (Just (.)) <*> (Nothing <*> y <*> z)
-
-		unapplying pure
-		
-= pure (.) <*> Nothing <*> y <*> z
-
-## Case 2 (x = Just f and y = Nothing)
-(Just f) <*> Nothing <*> z
-
-		applying outermost <*>
-		
-= fmap f (Nothing <*> z)
+#### a = Just a'
+(Just a') <*> Nothing
 
 		applying <*>
 		
-= fmap f Nothing
+= fmap a' Nothing
+
+		applying fmap
+		
+= Nothing
+
+Hence, using the last lemma, if any of *x*, *y* or *z* is Nothing, the entire expression becomes Nothing. Since Nothing = Nothing the law holds.
+
+## Case 2 (x = Just u, y = Just v and z = Just w -> OK because if any of them is Nothing we are in **Case 1**)
+(Just u) <*> ((Just v) <*> (Just w))
+
+		applying outermost <*>
+		
+= fmap u ((Just v) <*> (Just w))
+
+		applying <*>
+		
+= fmap u (fmap v (Just w))
+
+		applying innermost fmap
+		
+= fmap u (Just (v w))
+
+		applying fmap
+		
+= Just (u (v w))
+
+		unapplying pure
+		
+= pure (u (v w))
+
+		unapplying (.)
+		
+= pure ((u . v) w)
+
+		applying II applicative law
+		
+= pure ((u .) v) <*> pure w
+
+		applying II applicative law
+		
+= pure (u .) <*> pure v <*> pure w
+
+		rewriting (.) as prefix
+		
+= pure ((.) u) <*> pure v <*> pure w
+
+		applying II functor law
+		
+= pure (.) <*> pure u <*> pure v <*> pure w
+
+		applying pure
+		
+= pure (.) <*> Just u <*> pure v <*> pure w
+
+		applying pure
+
+= pure (.) <*> Just u <*> Just v <*> pure w
+
+		applying pure
+
+= pure (.) <*> Just u <*> Just v <*> Just w
+
+		
+
+		
 
