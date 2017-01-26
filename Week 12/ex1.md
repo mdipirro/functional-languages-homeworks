@@ -1,15 +1,16 @@
 # xs ++ [] = xs
 ## Base case (xs = [])
-  [] ++ [] 
-	
-	*applying ++* 
 
+  [] ++ [] 
+  
+	applying ++
+	
 = [] = xs
 
 ## Inductive case (x:xs)
   (x:xs) ++ []
   
-	*applying ++* 
+	applying ++
 	
 = x : (xs ++ [])
 
@@ -21,29 +22,29 @@
 ## Base case (xs = [])
   [] ++ (ys ++ zs)
   
-	*applying ++*
+	applying ++
 	
 = ys ++ zs
 
-	*unapplying ++*
+	unapplying ++
 	
 = ([] ++ ys) ++ zs
 
 ## Inductive case (x:xs)
   (x:xs) ++ (ys ++ zs)
   
-    *applying ++*
+    applying ++
     
 = x : (xs ++ (ys ++ zs))
 
-	*induction hypothesis*
+	induction hypothesis
 	
 = x : ((xs ++ ys) ++ zs)
 
-	*unapplying ++*
+	unapplying ++
 	
 = (x : (xs ++ ys)) ++ zs
 
-	*unapplying ++*
+	unapplying ++
 	
 = ((x:xs) ++ ys) ++ zs
