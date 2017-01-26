@@ -1,77 +1,77 @@
 # fmap id = id
 ## Base case (Leaf x)
-fmap id (Leaf x)
+		fmap id (Leaf x)
 
-		applying fmap
+applying fmap
 		
-= Leaf (id x)
+		= Leaf (id x)
 
-		applying id
+applying id
 		
-= (Leaf x)
+		= (Leaf x)
 
-		unapplying id
+unapplying id
 		
-= id (Leaf x)
+		= id (Leaf x)
 
 ## Inductive case (Node l r)
-fmap id (Node l r)
+		fmap id (Node l r)
 
-		applying fmap
+applying fmap
 		
-= Node (fmap id l) (fmap id r)
+		= Node (fmap id l) (fmap id r)
 
-		induction hypothesis on the first fmap
+induction hypothesis on the first fmap
 		
-= Node l (fmap id r)
+		= Node l (fmap id r)
 
-		induction hypothesis
+induction hypothesis
 		
-= Node l r
+		= Node l r
 
-		unapplying id
+unapplying id
 		
-= id (Node l r)
+		= id (Node l r)
 
 # fmap (f . g) = fmap f . fmap g
 ## Base case (Leaf x)
-fmap (f . g) (Leaf x) 
+		fmap (f . g) (Leaf x) 
 
-		applying fmap
+applying fmap
 		
-= Leaf ((f . g) x)
+		= Leaf ((f . g) x)
 
-		applying (.)
+applying (.)
 		
-= Leaf (f (g x))
+		= Leaf (f (g x))
 
-		unapplying fmap
+unapplying fmap
 		
-= fmap f (Leaf (g x))
+		= fmap f (Leaf (g x))
 
-		unapplying fmap
+unapplying fmap
 		
-= fmap f (fmap g (Leaf x))
+		= fmap f (fmap g (Leaf x))
 
-		unapplying (.)
+unapplying (.)
 		
-= (fmap f . fmap g) Leaf x
+		= (fmap f . fmap g) Leaf x
 
 ## Inductive case (Node l r)
-fmap (f . g) (Node l r)
+		fmap (f . g) (Node l r)
 
-		applying fmap
+applying fmap
 		
-= Node (fmap (f . g) l) (fmap (f . g) r)
+		= Node (fmap (f . g) l) (fmap (f . g) r)
 
-		induction hypothesis on the first fmap
+induction hypothesis on the first fmap
 		
-= Node ((fmap f . fmap g) l) (fmap (f . g) r)
+		= Node ((fmap f . fmap g) l) (fmap (f . g) r)
 
-		induction hypothesis on the third fmap
+induction hypothesis on the third fmap
 		
-= Node ((fmap f . fmap g) l) ((fmap f . fmap g) r)
+		= Node ((fmap f . fmap g) l) ((fmap f . fmap g) r)
 
-		unapplying fmap
+unapplying fmap
 		
-= (fmap f . fmap g) (Node l r)
+		= (fmap f . fmap g) (Node l r)

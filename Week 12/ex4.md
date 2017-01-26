@@ -1,206 +1,206 @@
 # pure id <\*> x = x
-pure id <\*> x 
+		pure id <\*> x 
 
-		applying pure
+applying pure
 		
-= (Just id) <\*> x
+		= (Just id) <\*> x
 
-		applying <*>
+applying <*>
 		
-= fmap id x
+		= fmap id x
 
-		applying first functor law (fmap id = id)
+applying first functor law (fmap id = id)
 		
-= x
+		= x
 
 # pure (g x) = pure g <\*> pure x
-pure (g x)
+		pure (g x)
 
-		applying pure
+applying pure
 		
-= Just (g x)
+		= Just (g x)
 
-		unapplying fmap (fmap g (Just x)) = Just (g x))
+unapplying fmap (fmap g (Just x)) = Just (g x))
 		
-= fmap g (Just x))
+		= fmap g (Just x))
 
-		unapplying <*>
+unapplying <*>
 		
-= (Just g) <\*> (Just x) 
+		= (Just g) <\*> (Just x) 
 
-		unapplying pure for the first Just
+unapplying pure for the first Just
 		
-= pure g <\*> (Just x)
+		= pure g <\*> (Just x)
 
-		unapplying pure for Just
+unapplying pure for Just
 		
-= pure g <\*> pure x
+		= pure g <\*> pure x
 
 # x <\*> pure y = pure (\g -> g y) <\*> x
 ## Case 1 (x = Nothing)
-Nothing <\*> pure y 
+		Nothing <\*> pure y 
 
-		applying pure
+applying pure
 		
-= Nothing <\*> Just y
+		= Nothing <\*> Just y
 
-		applying <*>
+applying <*>
 		
-= Nothing
+		= Nothing
 
-		unapplying fmap (fmap f Nothing = Nothing)
+unapplying fmap (fmap f Nothing = Nothing)
 		
-= fmap f Nothing
+		= fmap f Nothing
 
-		unapplying <*>
+unapplying <*>
 		
-= Just f <\*> Nothing
+		= Just f <\*> Nothing
 
-		unapplying pure
+unapplying pure
 		
-= pure f <\*> Nothing
+		= pure f <\*> Nothing
 
-		considering f as (\g -> g y)
+considering f as (\g -> g y)
 		
-= pure (\g -> g y) <\*> Nothing
+		= pure (\g -> g y) <\*> Nothing
 
 ## Case 2 (x = Just f)
-pure (\g -> g y) <\*> (Just f) = (Just f) <\*> pure y
+		pure (\g -> g y) <\*> (Just f) = (Just f) <\*> pure y
 
-		applying pure
+applying pure
 		
-= (Just (\g -> g y)) <\*> (Just f)
+		= (Just (\g -> g y)) <\*> (Just f)
 
-		applying <*>
+applying <*>
 		
-= fmap (\g -> g y) (Just f)
+		= fmap (\g -> g y) (Just f)
 
-		applying fmap
+applying fmap
 		
-= Just ((\g -> g y) f)
+		= Just ((\g -> g y) f)
 
-		applying \g
+applying \g
 		
-= Just (f y)
+		= Just (f y)
 
-		unapplying pure
+unapplying pure
 		
-= pure (f y)
+		= pure (f y)
 
-		applying II applicative law
+applying II applicative law
 		
-= pure f <\*> pure y
+		= pure f <\*> pure y
 
-		applying pure
+applying pure
 		
-= (Just f) <\*> pure y
+		= (Just f) <\*> pure y
 
 ###### or
 
-(Just f) <\*> pure y = pure (\g -> g y) <\*> (Just f)
-(Just f) <\*> pure y
+		(Just f) <\*> pure y = pure (\g -> g y) <\*> (Just f)
+		(Just f) <\*> pure y
 
-		applying pure
+applying pure
 		
-= (Just f) <\*> (Just y)
+		= (Just f) <\*> (Just y)
 
-		applying <*>
+applying <*>
 		
-= fmap f (Just y)
+		= fmap f (Just y)
 
-		applying fmap
+applying fmap
 		
-= Just (f y)
+		= Just (f y)
 
-		considering f y as ((\g -> g y) f)
+considering f y as ((\g -> g y) f)
 		
-= Just ((\g -> g y) f)
+		= Just ((\g -> g y) f)
 
-		applying pure
+applying pure
 		
-= pure ((\g -> g y) f) 
+		= pure ((\g -> g y) f) 
 
-		applying II applicative law
+applying II applicative law
 		
-= pure (\g -> g y) <\*> pure f
+		= pure (\g -> g y) <\*> pure f
 
-		applying pure
+applying pure
 		
-= pure (\g -> g y) <\*> Just f
+		= pure (\g -> g y) <\*> Just f
 
 # x <\*> (y <\*> z) = pure (.) <\*> x <\*> y <\*> z
 ## Case 1 (at least one among *x*, *y* or *z* is Nothing)
 ### Lemma: a <\*> Nothing = Nothing
 #### a = Nothing
-Nothing <\*> Nothing 
-		applying <*>
+		Nothing <\*> Nothing 
+applying <*>
 
-= Nothing
+		= Nothing
 
 #### a = Just a'
-(Just a') <\*> Nothing
+		(Just a') <\*> Nothing
 
-		applying <*>
+applying <*>
 		
-= fmap a' Nothing
+		= fmap a' Nothing
 
-		applying fmap
+applying fmap
 		
-= Nothing
+		= Nothing
 
 Hence, using the last lemma, if any of *x*, *y* or *z* is Nothing, the entire expression becomes Nothing. Since Nothing = Nothing the law holds.
 
 ## Case 2 (x = Just u, y = Just v and z = Just w -> OK because if any of them is Nothing we are in **Case 1**)
-(Just u) <\*> ((Just v) <\*> (Just w))
+		(Just u) <\*> ((Just v) <\*> (Just w))
 
-		applying outermost <*>
+applying outermost <*>
 		
-= fmap u ((Just v) <\*> (Just w))
+		= fmap u ((Just v) <\*> (Just w))
 
-		applying <*>
+applying <*>
 		
-= fmap u (fmap v (Just w))
+		= fmap u (fmap v (Just w))
 
-		applying innermost fmap
+applying innermost fmap
 		
-= fmap u (Just (v w))
+		= fmap u (Just (v w))
 
-		applying fmap
+applying fmap
 		
-= Just (u (v w))
+		= Just (u (v w))
 
-		unapplying pure
+unapplying pure
 		
-= pure (u (v w))
+		= pure (u (v w))
 
-		unapplying (.)
+unapplying (.)
 		
-= pure ((u . v) w)
+		= pure ((u . v) w)
 
-		applying II applicative law
+applying II applicative law
 		
-= pure ((u .) v) <\*> pure w
+		= pure ((u .) v) <\*> pure w
 
-		applying II applicative law
+applying II applicative law
 		
-= pure (u .) <\*> pure v <\*> pure w
+		= pure (u .) <\*> pure v <\*> pure w
 
-		rewriting (.) as prefix
+rewriting (.) as prefix
 		
-= pure ((.) u) <\*> pure v <\*> pure w
+		= pure ((.) u) <\*> pure v <\*> pure w
 
-		applying II functor law
+applying II functor law
 		
-= pure (.) <\*> pure u <\*> pure v <\*> pure w
+		= pure (.) <\*> pure u <\*> pure v <\*> pure w
 
-		applying pure
+applying pure
 		
-= pure (.) <\*> Just u <\*> pure v <\*> pure w
+		= pure (.) <\*> Just u <\*> pure v <\*> pure w
 
-		applying pure
+applying pure
 
-= pure (.) <\*> Just u <\*> Just v <\*> pure w
+		= pure (.) <\*> Just u <\*> Just v <\*> pure w
 
-		applying pure
+applying pure
 
-= pure (.) <\*> Just u <\*> Just v <\*> Just w
+		= pure (.) <\*> Just u <\*> Just v <\*> Just w
