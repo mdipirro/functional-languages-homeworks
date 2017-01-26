@@ -7,9 +7,9 @@ data LKC =  VAR String | NUM Int | NULL | ADD LKC LKC |
             LET LKC [(LKC,LKC)] | LETREC LKC [(LKC, LKC)]
             deriving(Show, Eq)
 
-keywords :: [String]
-keywords = ["cons", "head", "tail", "eq", "leq", "lambda", "if", "let", "null",
-  "letrec"]
+{-keywords :: [String]
+keywords = ["cons", "head", "tail", "eq", "leq", "lambda", "if", "let", 
+"null", "letrec"]-}
 
 prog :: Parser LKC
 prog = letp <|> letrec
@@ -38,17 +38,41 @@ bind =  do  v <- var
                 b <- bind
                 return $ (v, e) : b
                 <|> return [(v, e)]
+         
+ident :: Parser String
+ident = do l  <- lower
+           ls <- many alphanum
+           return (l:ls)
+        
+identifier :: Parser String
+identifier = token ident
 
 var :: Parser LKC
-var = do  l  <- lower
-          ls <- many alphanum
-          let v = l:ls
+var = do i <- identifier
+         return $ VAR i
+
+{-var :: Parser LKC
+var = do  i <- identifier
           if not $ elem v keywords
           then return $ VAR v
-          else empty
+          else empty-}
 
+{-
+expa must be run after opp and ifp because at the factor level it checks 
+for a variable (in order to call a function or to use the corresponding 
+value). Unfortunately, 'if' or 'opp' operands are considered as variables.
+Thus a parsing error will occur. Excluding those 'keywords' is necessary
+to solve this problem. There are two ways to do that. One is running expa
+after opp and if. The second is provididing a keyword list exluding every
+possible keyword (or only those used by opp and if) and modifying the var
+parser. The latter will check the variable name and, if it matches with
+a keyword, the empty list is returned. Doing so will make the parser fail
+and will cause the execution of the following parsers. Anyway, the last
+solution will exlude some names, while the assigments seems to allow also
+reserved names. This is why I chose the latter.
+-}
 expr :: Parser LKC
-expr =  prog <|> lambda <|> expa <|> opp <|> ifp
+expr =  prog <|> lambda <|> opp <|> ifp <|> expa
 
 lambda :: Parser LKC
 lambda = do symbol "lambda"
@@ -165,10 +189,3 @@ seqexpr = do  e   <- expr
               es  <- many (do symbol ","
                               expr)
               return $ e:es
-
-
-{-|do  symbol ","
-    es <- seqexpr
-    return $ e:es
-    <|> return [e]
--}
