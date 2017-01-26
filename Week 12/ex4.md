@@ -1,9 +1,9 @@
-# pure id <*> x = x
-pure id <*> x 
+# pure id <\*> x = x
+pure id <\*> x 
 
 		applying pure
 		
-= (Just id) <*> x
+= (Just id) <\*> x
 
 		applying <*>
 		
@@ -13,7 +13,7 @@ pure id <*> x
 		
 = x
 
-# pure (g x) = pure g <*> pure x
+# pure (g x) = pure g <\*> pure x
 pure (g x)
 
 		applying pure
@@ -26,23 +26,23 @@ pure (g x)
 
 		unapplying <*>
 		
-= (Just g) <*> (Just x) 
+= (Just g) <\*> (Just x) 
 
 		unapplying pure for the first Just
 		
-= pure g <*> (Just x)
+= pure g <\*> (Just x)
 
 		unapplying pure for Just
 		
-= pure g <*> pure x
+= pure g <\*> pure x
 
-# x <*> pure y = pure (\g -> g y) <*> x
+# x <\*> pure y = pure (\g -> g y) <\*> x
 ## Case 1 (x = Nothing)
-Nothing <*> pure y 
+Nothing <\*> pure y 
 
 		applying pure
 		
-= Nothing <*> Just y
+= Nothing <\*> Just y
 
 		applying <*>
 		
@@ -54,22 +54,22 @@ Nothing <*> pure y
 
 		unapplying <*>
 		
-= Just f <*> Nothing
+= Just f <\*> Nothing
 
 		unapplying pure
 		
-= pure f <*> Nothing
+= pure f <\*> Nothing
 
 		considering f as (\g -> g y)
 		
-= pure (\g -> g y) <*> Nothing
+= pure (\g -> g y) <\*> Nothing
 
 ## Case 2 (x = Just f)
-pure (\g -> g y) <*> (Just f) = (Just f) <*> pure y
+pure (\g -> g y) <\*> (Just f) = (Just f) <\*> pure y
 
 		applying pure
 		
-= (Just (\g -> g y)) <*> (Just f)
+= (Just (\g -> g y)) <\*> (Just f)
 
 		applying <*>
 		
@@ -89,20 +89,20 @@ pure (\g -> g y) <*> (Just f) = (Just f) <*> pure y
 
 		applying II applicative law
 		
-= pure f <*> pure y
+= pure f <\*> pure y
 
 		applying pure
 		
-= (Just f) <*> pure y
+= (Just f) <\*> pure y
 
 ###### or
 
-(Just f) <*> pure y = pure (\g -> g y) <*> (Just f)
-(Just f) <*> pure y
+(Just f) <\*> pure y = pure (\g -> g y) <\*> (Just f)
+(Just f) <\*> pure y
 
 		applying pure
 		
-= (Just f) <*> (Just y)
+= (Just f) <\*> (Just y)
 
 		applying <*>
 		
@@ -122,23 +122,23 @@ pure (\g -> g y) <*> (Just f) = (Just f) <*> pure y
 
 		applying II applicative law
 		
-= pure (\g -> g y) <*> pure f
+= pure (\g -> g y) <\*> pure f
 
 		applying pure
 		
-= pure (\g -> g y) <*> Just f
+= pure (\g -> g y) <\*> Just f
 
-# x <*> (y <*> z) = pure (.) <*> x <*> y <*> z
+# x <\*> (y <\*> z) = pure (.) <\*> x <\*> y <\*> z
 ## Case 1 (at least one among *x*, *y* or *z* is Nothing)
-### Lemma: a <*> Nothing = Nothing
+### Lemma: a <\*> Nothing = Nothing
 #### a = Nothing
-Nothing <*> Nothing 
+Nothing <\*> Nothing 
 		applying <*>
 
 = Nothing
 
 #### a = Just a'
-(Just a') <*> Nothing
+(Just a') <\*> Nothing
 
 		applying <*>
 		
@@ -151,11 +151,11 @@ Nothing <*> Nothing
 Hence, using the last lemma, if any of *x*, *y* or *z* is Nothing, the entire expression becomes Nothing. Since Nothing = Nothing the law holds.
 
 ## Case 2 (x = Just u, y = Just v and z = Just w -> OK because if any of them is Nothing we are in **Case 1**)
-(Just u) <*> ((Just v) <*> (Just w))
+(Just u) <\*> ((Just v) <\*> (Just w))
 
 		applying outermost <*>
 		
-= fmap u ((Just v) <*> (Just w))
+= fmap u ((Just v) <\*> (Just w))
 
 		applying <*>
 		
@@ -179,33 +179,28 @@ Hence, using the last lemma, if any of *x*, *y* or *z* is Nothing, the entire ex
 
 		applying II applicative law
 		
-= pure ((u .) v) <*> pure w
+= pure ((u .) v) <\*> pure w
 
 		applying II applicative law
 		
-= pure (u .) <*> pure v <*> pure w
+= pure (u .) <\*> pure v <\*> pure w
 
 		rewriting (.) as prefix
 		
-= pure ((.) u) <*> pure v <*> pure w
+= pure ((.) u) <\*> pure v <\*> pure w
 
 		applying II functor law
 		
-= pure (.) <*> pure u <*> pure v <*> pure w
+= pure (.) <\*> pure u <\*> pure v <\*> pure w
 
 		applying pure
 		
-= pure (.) <*> Just u <*> pure v <*> pure w
+= pure (.) <\*> Just u <\*> pure v <\*> pure w
 
 		applying pure
 
-= pure (.) <*> Just u <*> Just v <*> pure w
+= pure (.) <\*> Just u <\*> Just v <\*> pure w
 
 		applying pure
 
-= pure (.) <*> Just u <*> Just v <*> Just w
-
-		
-
-		
-
+= pure (.) <\*> Just u <\*> Just v <\*> Just w
